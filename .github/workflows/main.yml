@@ -1,0 +1,41 @@
+name: C++ CI
+
+# Trigger the workflow on every push and pull request to the main branch
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+# Define the jobs for this workflow
+jobs:
+  build-and-test:
+    name: Build and Test C++ Project
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Check out the code from the repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Step 2: Set up C++ build environment
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake g++ make
+
+    # Step 3: Create build directory and build the project
+    - name: Build the project
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+        cmake --build .
+
+    # Step 4: Run tests
+    - name: Run tests
+      run: |
+        cd build
+        ctest --output-on-failure
